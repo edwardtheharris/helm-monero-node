@@ -26,8 +26,8 @@ fullnameOverride: ""
 # ```
 image:
   pullPolicy: IfNotPresent
-  repository: ghcr.io/sethforprivacy/simple-monerod
-  tag: v0.18.3.4@sha256:435a80a7f7cc0a12d05038492e879aa45d6e7eb791ef1327ebff21c205491398
+  repository: edwardtheharris/monero-node
+  tag: 0.0.1-846722
 
 ###
 # ```{rubric} Ingress Values
@@ -69,8 +69,6 @@ ingress:
 # ```
 labels:
   node: k8s05.breeze-blocks.net
-  app.kubernetes.io/name: monero
-  app.kubernetes.io/instance: monero
 
 ###
 # ```{rubric} Monero Node Configuration Values
@@ -163,17 +161,16 @@ service:
         port: 18080
         protocol: TCP
         targetPort: 18080
-    type: LoadBalancer
   rpc:
     enabled: true
-    name: rpc
+    name: monero-rpc
     ports:
       rpc:
         enabled: true
         port: 18089
         protocol: TCP
         targetPort: 18089
-    type: LoadBalancer
+  type: LoadBalancer
 
 ###
 # ```{rubric} Service Account Values
