@@ -1,15 +1,35 @@
+{{- if .Values.service.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "postgresql.fullname" . }}
+  name: {{ include "monero.fullname" . }}-main
   labels:
-    {{- include "postgresql.labels" . | nindent 4 }}
+    {{- include "monero.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.main.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 5432
-      protocol: TCP
-      name: postgres
+    - port: {{ .Values.service.main.ports.main.port }}
+      targetPort: {{ .Values.service.main.ports.main.port }}
+      protocol: {{ .Values.service.main.ports.main.protocol }}
+      name: {{ .Values.service.main.name }}
   selector:
-    {{- include "postgresql.selectorLabels" . | nindent 4 }}
+    {{- include "monero.selectorLabels" . | nindent 4 }}
+{{- if .Values.service.rpc.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "monero.fullname" . }}-rpc
+  labels:
+    {{- include "monero.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.rpc.type }}
+  ports:
+    - port: {{ .Values.service.rpc.ports.rpc.port }}
+      targetPort: {{ .Values.service.rpc.ports.rpc.port }}
+      protocol: {{ .Values.service.rpc.ports.rpc.protocol }}
+      name: {{ .Values.service.rpc.name }}
+  selector:
+    {{- include "monero.selectorLabels" . | nindent 4 }}
+{{- end -}}
+{{- end -}}
