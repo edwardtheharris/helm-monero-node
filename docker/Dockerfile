@@ -5,4 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/edwardtheharris/helm-m
 LABEL org.opencontainers.image.description="A Monero Node running in ArchLinux"
 LABEL org.opencontainers.image.name="monero"
 LABEL org.opencontainers.image.version=${VERSION}
-RUN pacman -Syyu monero
+RUN pacman -Syyu monero --noconfirm
+CMD ["/usr/sbin/monerod", "--data-dir", "/srv/monero", "--limit-rate", "-1", \
+    "--enable-dns-blocklist", "--hide-my-port", "--enforce-dns-checkpointing", \
+    "--db-sync-mode=fast"]

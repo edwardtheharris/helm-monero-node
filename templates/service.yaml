@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "monero.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.main.type }}
+  type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.main.ports.main.port }}
       targetPort: {{ .Values.service.main.ports.main.port }}
@@ -23,7 +23,7 @@ metadata:
   labels:
     {{- include "monero.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.rpc.type }}
+  type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.rpc.ports.rpc.port }}
       targetPort: {{ .Values.service.rpc.ports.rpc.port }}
