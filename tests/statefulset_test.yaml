@@ -28,11 +28,11 @@ values:
 # :start-at: "tests:\n"
 # ```
 tests:
-- asserts:
+- it: should be a StatefulSet
+  asserts:
   - isKind:
       of: StatefulSet
   - equal:
       path: metadata.name
-      value: template-replace-
-  it: should be a StatefulSet
+      value: monero
 

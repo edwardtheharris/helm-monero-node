@@ -2,35 +2,37 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ .Values.nameOverride }}
+  labels:
+    {{- include "monero.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      ss.kubernetes.io/name: {{ .Values.nameOverride }}
-      ss.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "monero.selectorLabels" . | nindent 6 }}
   serviceName: {{ .Values.nameOverride }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.statefulset.replicas }}
   template:
     metadata:
       labels:
-        ss.kubernetes.io/name: {{ .Values.nameOverride }}
-        ss.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "monero.labels" . | nindent 8 }}
     spec:
       containers:
-        - name: nginx
+        - name: {{ .Release.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
-              name: http
+            - containerPort: {{ .Values.service.main.ports.main.port }}
+              name: {{ .Values.service.main.name }}
           volumeMounts:
-            - name: nginx
-              mountPath: /etc/nginx
+            - name: {{ .Values.persistence.blockchain.name }}
+              mountPath: {{ .Values.persistence.blockchain.mountPath }}
   volumeClaimTemplates:
   - metadata:
-      name: nginx
+      name: {{ .Values.persistence.blockchain.name }}
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
       resources:
         requests:
-          storage: {{ .Values.persistence.size }}
-      storageClassName: csi-driver-lvm-linear
+          storage: {{ .Values.persistence.blockchain.size }}
+      storageClassName: csi-lvm-linear

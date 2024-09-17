@@ -1,529 +1,195 @@
 ###
-# ```{rubric} Default Values
+# ```{rubric} Full Name Override
 # ```
 # ---
-# Default values for the Helm template-replace- template.
-#
-# This is a YAML-formatted file.
-#
-# Declare variables to be passed into your templates.
+# Override the release and chart name.
 #
 # ```{literalinclude} /values.yaml
-# :caption: affinity
-# :language: yaml
-# :start-at: "affinity:\n"
-# :end-before: "###\n"
-# ```
-affinity:
-  nodeAffinity:
-  requiredDuringSchedulingIgnoredDuringExecution:
-    nodeSelectorTerms:
-    - matchExpressions:
-      - key: kubernetes.io/os
-        operator: In
-        values:
-        - linux
-
-###
-# ```{rubric} Autoscaling
-# ```
-# ---
-# Configure auto scaling on the cluster.
-#
-# ```{literalinclude} /values.yaml
-# :caption: affinity
 # :language: yaml
 # :start-at: "autoscaling:\n"
 # :end-before: "###\n"
 # ```
-#
-# `targetCPUUtilizationPercentage: 80`{l=yaml}
-#
-# `targetMemoryUtilizationPercentage: 80`{l=yaml}
 autoscaling:
   enabled: false
-  maxReplicas: 0
-  minReplicas: 0
+fullnameOverride: ""
 
 ###
-# ```{rubric} template-replace- Config
+# ```{rubric} Image Values
 # ```
 # ---
-# Configure the template-replace- deployment.
+# Describe the image to use for the node.
 #
 # ```{literalinclude} /values.yaml
-# :caption: config
-# :language: yaml
-# :start-at: "config:\n"
-# :end-before: "###\n"
-# ```
-config:
-  allowed_hosts: "*"
-  caches_backend: django_redis.cache.RedisCache
-  celery:
-    img:
-      repository: ghcr.io/edwardtheharris/helm-template-replace-/celery
-      tag: '0.0.1.rc29'
-    broker: 'redis://redis.redis.svc.cluster.local:6379/0'
-    name: celery-config
-    results: 'redis://redis.redis.svc.cluster.local:6379/0'
-    root: '/opt/celery'
-  name: template-replace--config
-
-###
-# ```{rubric} Database
-# ```
-# ---
-# Configure a relational database connection, MySQL and PostgreSQL are
-# supported.
-#
-# ```{literalinclude} /values.yaml
-# :caption: database
-# :language: yaml
-# :start-at: "database:\n"
-# :end-before: "###\n"
-# ```
-database:
-  database: template-replace-
-  engine: django.db.backends.postgresql
-  host: postgresql.postgresql.svc.cluster.local
-  name: postgres
-  password: ""
-  port: '5432'
-  secretfile: secrets/secrets.yaml
-  timeout: '300'
-  username: ""
-
-###
-# ```{rubric} Full Name Override
-# ```
-# ---
-# Override the full name of the release.
-#
-# ```{literalinclude} /values.yaml
-# :caption: fullname override
-# :language: yaml
-# :start-at: "fullnameOverride: \"template-replace-\"\n"
-# :end-before: "###\n"
-# ```
-fullnameOverride: "template-replace-"
-
-###
-# ```{rubric} Container image settings
-# ```
-# ---
-# Define the image, tag and repository to be deployed.
-#
-# ```{literalinclude} /values.yaml
-# :caption: image
 # :language: yaml
 # :start-at: "image:\n"
 # :end-before: "###\n"
 # ```
 image:
-  pullPolicy: Always
-  repository: ghcr.io/edwardtheharris/helm-template-replace-/template-replace-
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: '0.0.1.rc29'
-  secret:
-    name: ghcr
-    data: ''
+  pullPolicy: IfNotPresent
+  repository: ghcr.io/sethforprivacy/simple-monerod
+  tag: v0.18.3.4@sha256:435a80a7f7cc0a12d05038492e879aa45d6e7eb791ef1327ebff21c205491398
 
 ###
-# ```{rubric} Image Pull Secrets
+# ```{rubric} Ingress Values
 # ```
 # ---
-# Secrets required to pull the deployment image.
+# Enable and configure ingress for the service.
 #
 # ```{literalinclude} /values.yaml
-# :caption: imagePullSecrets
 # :language: yaml
-# :start-at: "imagePullSecrets:\n"
+# :start-at: "image:\n"
 # :end-before: "###\n"
-# ```
-imagePullSecrets:
-- name: ghcr
-
-###
-# ```{rubric} Ingress
-# ```
-# ---
-# Configure Ingress for the service.
-#
-# ```{literalinclude} /values.yaml
-# :caption: ingress
-# :language: yaml
-# :start-at: "ingress:\n"
-# :end-before: "###\n"
-# ```
-#
-# ```{code-block} yaml
-# :caption: tls example
-# tls:
-#  - secretName: chart-example-tls
-#    hosts:
-#      - chart-example.local
 # ```
 ingress:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  className: "nginx"
+  annotations: {}
   enabled: true
+  className: nginx
   hosts:
-  - host: template-replace-.svc.cluster.local
+  - host: monero.breeze-blocks.net
     paths:
     - path: /
-      pathType: ImplementationSpecific
-  tls: []
+      pathType: Prefix
+      port: 18080
+  tls:
+  - hosts:
+    - monero.breeze-blocks.net
+    secretName: monero-tls
+
 
 ###
-# ```{rubric} Liveness Probe
+# ```{rubric} Labels Values
 # ```
 # ---
-# Set a command to test for liveness.
+# Labels to be applied to all resources
 #
 # ```{literalinclude} /values.yaml
-# :caption: liveness probe
 # :language: yaml
-# :start-at: "livenessProbe:\n"
+# :start-at: "image:\n"
 # :end-before: "###\n"
 # ```
-livenessProbe:
-  exec:
-    command:
-    - /opt/template-replace-/bin/template-replace--server
-    - status
-  # When to give up and restart the container
-  failureThreshold: 3
-  # Delay before the first probe is initiated
-  initialDelaySeconds: 30
-  # How often to perform the probe
-  periodSeconds: 10
-  # Minimum consecutive successes for the probe to
-  # be considered successful after having failed
-  successThreshold: 1
-  # When the probe times out
-  timeoutSeconds: 5
+labels:
+  node: k8s05.breeze-blocks.net
+  app.kubernetes.io/name: monero
+  app.kubernetes.io/instance: monero
 
 ###
-# ```{rubric} Name Override
+# ```{rubric} Monero Node Configuration Values
 # ```
 # ---
-# Override the release name, but not quite all the way.
+# Configure the monero node that will run on the cluster.
 #
 # ```{literalinclude} /values.yaml
-# :caption: name override
 # :language: yaml
-# :start-at: "nameOverride: \"template-replace-\"\n"
+# :start-at: "monero:\n"
 # :end-before: "###\n"
 # ```
-nameOverride: "template-replace-"
+monero:
+  enablednsblocklist: true
+  noigd: true
+  pruneblockchain: true
+  publicnode: true
+  rpcbindip: 0.0.0.0
+  rpcbindport: "18089"
+nameOverride: "monero"
 
 ###
-# ```{rubric} Node Selector
+# ```{rubric} Image Values
 # ```
 # ---
-# Select nodes for workloads to run on.
+# Describe the image to use for the node.
 #
 # ```{literalinclude} /values.yaml
-# :caption: affinity
-# :language: yaml
-# :start-at: "nodeSelector:\n"
-# :end-before: "###\n"
-# ```
-nodeSelector:
-  kubernetes.io/os: linux
-
-###
-# ```{rubric} Persistence Configuration
-# ```
-# ---
-# Provision persistent storage if required.
-#
-# ```{literalinclude} /values.yaml
-# :caption: persistence
 # :language: yaml
 # :start-at: "persistence:\n"
 # :end-before: "###\n"
 # ```
 persistence:
-  claim:
-    enabled: false
-  name: template-replace-
-  size: 50Gi
-  storageClass: csi-driver-lvm-linear
+  blockchain:
+    enabled: true
+    mountPath: /srv/monero
+    name: monero-blockchain-pvc
+    size: 300Gi
+  storageClass: csi-lvm-linear
 
 ###
-# ```{rubric} Pod Annotations
+# ```{rubric} Portal Values
 # ```
 # ---
-# Apply these annotations to all pods.
+# Portal configuration values.
 #
 # ```{literalinclude} /values.yaml
-# :caption: pod annotations
 # :language: yaml
-# :start-at: "podAnnotations: {}\n"
+# :start-at: "portal:\n"
 # :end-before: "###\n"
 # ```
-podAnnotations: {}
+portal:
+  open:
+    enabled: true
 
 ###
-# ```{rubric} Pod Labels
+# ```{rubric} Security Context Values
 # ```
 # ---
-# Apply these labels to all pods.
+# Security context for the deployment's pod.
 #
 # ```{literalinclude} /values.yaml
-# :caption: pod labels
 # :language: yaml
-# :start-at: "podLabels:\n"
+# :start-at: "securityContext:\n"
 # :end-before: "###\n"
 # ```
-podLabels:
-  app: template-replace-
+securityContext:
+  container:
+    readOnlyRootFilesystem: false
+    runAsGroup: 0
+    runAsUser: 0
 
 ###
-# ```{rubric} Pod Security Context
+# ```{rubric} Service Values
 # ```
 # ---
-# Define security context for pods.
+# Services for main and rpc ports.
 #
 # ```{literalinclude} /values.yaml
-# :caption: pod security context
-# :language: yaml
-# :start-at: "podSecurityContext: {}\n"
-# :end-before: "###\n"
-# ```
-#
-# ```{code-block} yaml
-# :caption: pod security context EXAMPLE
-#
-# podSecurityContext:
-#  fsGroup: 1000
-# ```
-podSecurityContext: {}
-
-###
-# ```{rubric} Replica Count
-# ```
-# ---
-# Deploy this many replicas by default.
-#
-# ```{literalinclude} /values.yaml
-# :caption: replicas
-# :language: yaml
-# :start-at: "replicaCount: 1\n"
-# :end-before: "###\n"
-# ```
-# readinessProbe:
-#   exec:
-#     command:
-#     - pg_isready
-#     - -U
-#     - postgres
-#   failureThreshold: 3 # When to give up, marking the Pod as Unready
-#   initialDelaySeconds: 5 # Delay before the first probe is initiated, can be shorter than liveness probe
-#   periodSeconds: 5 # How often to perform the probe
-#   successThreshold: 1 # Minimum consecutive successes for the probe to be considered successful
-#   timeoutSeconds: 1 # When the probe times out
-replicaCount: 1
-
-###
-# ```{rubric} Resource Requests and Limits
-# ```
-# ---
-# Set requests and limits for workload resources.
-#
-# ```{literalinclude} /values.yaml
-# :caption: resources
-# :language: yaml
-# :start-at: "resources:\n"
-# :end-before: "###\n"
-# ```
-#
-# We usually recommend not to specify default resources and to leave this as
-# a conscious choice for the user. This also increases chances charts run on
-# environments with little resources, such as Minikube. If you do want to
-# specify resources, uncomment the following lines, adjust them as necessary,
-# and remove the curly braces after `resources:`{l=yaml}.
-#
-# ```{code-block} yaml
-# :caption: resources example
-#
-# limits:
-#   cpu: 100m
-#   memory: 128Mi
-# requests:
-#   cpu: 100m
-#   memory: 128Mi
-# ```
-resources:
-  limits:
-    cpu: 2
-    memory: 4096Mi
-
-###
-# ```{rubric} Security Context
-# ```
-# ---
-# Set a security context on the workloads.
-#
-# ```{literalinclude} /values.yaml
-# :caption: securityContext
-# :language: yaml
-# :start-at: "securityContext: {}\n"
-# :end-before: "###\n"
-# ```
-securityContext: {}
-
-###
-# ```{rubric} Service
-# ```
-# ---
-# Define the service used to access the application.
-#
-# ```{literalinclude} /values.yaml
-# :caption: service
 # :language: yaml
 # :start-at: "service:\n"
 # :end-before: "###\n"
 # ```
-#
-# ```{code-block} yaml
-# :caption: capabilities example
-# capabilities:
-#   drop:
-#   - ALL
-# readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsUser: 1000
-# ```
 service:
   enabled: true
-  port: 8000
-  targetPort: 8000
-  type: ClusterIP
-  selectorLabels:
-    app.kubernetes.io/component: network
-    app.kubernetes.io/name: template-replace-
+  main:
+    name: monero-main
+    ports:
+      main:
+        port: 18080
+        protocol: TCP
+        targetPort: 18080
+    type: LoadBalancer
+  rpc:
+    enabled: true
+    name: rpc
+    ports:
+      rpc:
+        enabled: true
+        port: 18089
+        protocol: TCP
+        targetPort: 18089
+    type: LoadBalancer
 
 ###
-# ```{rubric} Service Account
+# ```{rubric} Service Account Values
 # ```
 # ---
-# When enabled, will create a Kubernetes Service Account during deployment.
+# Enable and configure a new service account.
 #
 # ```{literalinclude} /values.yaml
-# :caption: serviceAccount
 # :language: yaml
 # :start-at: "serviceAccount:\n"
-# :end-before: "###\n"
 # ```
 serviceAccount:
-  # Annotations to add to the service account
-  annotations:
-    sa.kubernetes.io/name: template-replace-
-  # Automatically mount a ServiceAccount's API credentials?
+  annotations: {}
   automount: true
-  # Specifies whether a service account should be created
   create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: "template-replace-"
+  name: monero
 
-###
-# ```{rubric} Super User Config
-# ```
-# ---
-# When enabled, will create a super user account during deployment.
-#
-# ```{literalinclude} /values.yaml
-# :caption: superUser
-# :language: yaml
-# :start-at: "superUser:\n"
-# :end-before: "###\n"
-# ```
-superUser:
-  create: true
-  email: template-replace-@template-replace-.svc.cluster.local
-  name: nb-admin
-  password: ""
-  secret:
-    name: secret.superuser
-  secretKey: '57evlrs^0pmu5#ys=9t6==lf6hdz&amp;$1)qq-(%f1noo_b+nsy@f'
-  token: ""
-  username: ""
-
-###
-# ```{rubric} Tolerations
-# ```
-# ---
-# Define taints that will be tolerated to run workloads on nodes.
-#
-# ```{literalinclude} /values.yaml
-# :caption: tolerations
-# :language: yaml
-# :start-at: "tolerations: []\n"
-# :end-before: "###\n"
-# ```
-tolerations: []
-
-###
-# ```{rubric} Type
-# ```
-# ---
-# May be set to `Deployment` or `StatefulSet`.
-#
-# ```{literalinclude} /values.yaml
-# :caption: type
-# :language: yaml
-# :start-at: "type: Deployment\n"
-# :end-before: "###\n"
-# ```
-type: Deployment
-
-###
-# ```{rubric} Volume Mounts
-# ```
-# ---
-# Additional volumeMounts on the output Deployment definition.
-#
-# ```{literalinclude} /values.yaml
-# :caption: volume mounts
-# :language: yaml
-# :start-at: "volumeMounts: []\n"
-# :end-before: "###\n"
-# ```
-#
-# ```{code-block} yaml
-# :caption: volumeMounts example
-# - mountPath: "/mnt/k8s/psql"
-#   name: data
-#   readOnly: false
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-# ```
-volumeMounts: []
-
-###
-# ```{rubric} Volumes
-# ```
-# ---
-# Additional volumes on the output Deployment definition.
-#
-# ```{literalinclude} /values.yaml
-# :caption: volumes
-# :language: yaml
-# :start-at: "volumes: []\n"
-# ```
-#
-# ```{code-block} yaml
-# :caption: volume example
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-# ```
-volumes: []
+statefulset:
+  replicas: 1
