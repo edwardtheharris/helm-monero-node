@@ -7,12 +7,12 @@ date: 2024-08-17
 title: Readme
 ---
 
-[![CodeQL](https://github.com/edwardtheharris/helm-template/actions/workflows/codeql.yml/badge.svg)](https://github.com/edwardtheharris/helm-template/actions/workflows/codeql.yml)
-[![Dependabot Updates](https://github.com/edwardtheharris/helm-template/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/edwardtheharris/helm-template/actions/workflows/dependabot/dependabot-updates)
-[![Documentation](https://github.com/edwardtheharris/helm-template/actions/workflows/documentation.yml/badge.svg)](https://github.com/edwardtheharris/helm-template/actions/workflows/documentation.yml)
-[![OSSAR](https://github.com/edwardtheharris/helm-template/actions/workflows/ossar.yml/badge.svg)](https://github.com/edwardtheharris/helm-template/actions/workflows/ossar.yml)
-[![Test Helm Chart](https://github.com/edwardtheharris/helm-template/actions/workflows/helm.yml/badge.svg)](https://github.com/edwardtheharris/helm-template/actions/workflows/helm.yml)
-[![wakatime](https://wakatime.com/badge/github/edwardtheharris/helm-template.svg)](https://wakatime.com/badge/github/edwardtheharris/helm-template)
+[![CodeQL](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/codeql.yml/badge.svg)](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/codeql.yml)
+[![Dependabot Updates](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/dependabot/dependabot-updates)
+[![Documentation](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/documentation.yml/badge.svg)](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/documentation.yml)
+[![OSSAR](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/ossar.yml/badge.svg)](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/ossar.yml)
+[![Test Helm Chart](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/helm.yml/badge.svg)](https://github.com/edwardtheharris/helm-monero-node/actions/workflows/helm.yml)
+[![wakatime](https://wakatime.com/badge/github/edwardtheharris/helm-monero-node.svg)](https://wakatime.com/badge/github/edwardtheharris/helm-monero-node)
 
 ## Usage
 
