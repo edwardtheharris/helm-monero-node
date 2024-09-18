@@ -11,9 +11,9 @@ pipenv = "*"
 [dev-packages]
 "sphinxcontrib.autoyaml" = "*"
 myst-parser = {extras = ["linkify"], version = "*"}
+pylint = "*"
 sphinx = "*"
 sphinx-autobuild = "*"
-sphinx-autobuilt = "*"
 sphinx-book-theme = "*"
 sphinx-design = "*"
 sphinxemoji = "*"
