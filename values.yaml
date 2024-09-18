@@ -27,7 +27,7 @@ fullnameOverride: ""
 image:
   pullPolicy: IfNotPresent
   repository: edwardtheharris/monero-node
-  tag: 0.0.1-846722
+  tag: 0.0.1-1b4924
 
 ###
 # ```{rubric} Ingress Values
@@ -69,25 +69,6 @@ ingress:
 # ```
 labels:
   node: k8s05.breeze-blocks.net
-
-###
-# ```{rubric} Monero Node Configuration Values
-# ```
-# ---
-# Configure the monero node that will run on the cluster.
-#
-# ```{literalinclude} /values.yaml
-# :language: yaml
-# :start-at: "monero:\n"
-# :end-before: "###\n"
-# ```
-monero:
-  enablednsblocklist: true
-  noigd: true
-  pruneblockchain: true
-  publicnode: true
-  rpcbindip: 0.0.0.0
-  rpcbindport: "18089"
 nameOverride: "monero"
 
 ###
@@ -183,7 +164,8 @@ service:
 # :start-at: "serviceAccount:\n"
 # ```
 serviceAccount:
-  annotations: {}
+  annotations:
+    sa.kubernetes.io/name: monero
   automount: true
   create: true
   name: monero

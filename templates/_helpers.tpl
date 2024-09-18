@@ -40,6 +40,8 @@ helm.sh/chart: {{ include "monero.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/name: {{ .Chart.Name }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.labels }}
 {{ .Values.labels | toYaml }}
 {{- end }}
@@ -49,9 +51,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "monero.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Chart.Name }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-topology.lvm.csi/node: {{ .Values.labels.node }}
+kubernetes.io/hostname: {{ .Values.labels.node }}
 {{- end }}
 
 {{/*
