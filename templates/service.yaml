@@ -2,34 +2,25 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "monero.fullname" . }}-main
+  name: {{ include "monero.fullname" . }}
   labels:
     {{- include "monero.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  externalIPs:
+    {{ .Values.ingress.externalIPs }}
+  loadBalancerIP: {{ .Values.ingress.loadBalancerIP }}
   ports:
     - port: {{ .Values.service.main.ports.main.port }}
       targetPort: {{ .Values.service.main.ports.main.port }}
       protocol: {{ .Values.service.main.ports.main.protocol }}
       name: {{ .Values.service.main.name }}
-  selector:
-    {{- include "monero.selectorLabels" . | nindent 4 }}
-{{- if .Values.service.rpc.enabled -}}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "monero.fullname" . }}-rpc
-  labels:
-    {{- include "monero.labels" . | nindent 4 }}
-spec:
-  type: {{ .Values.service.type }}
-  ports:
+{{- if .Values.service.rpc.enabled }}
     - port: {{ .Values.service.rpc.ports.rpc.port }}
       targetPort: {{ .Values.service.rpc.ports.rpc.port }}
       protocol: {{ .Values.service.rpc.ports.rpc.protocol }}
       name: {{ .Values.service.rpc.name }}
+{{- end }}
   selector:
     {{- include "monero.selectorLabels" . | nindent 4 }}
-{{- end -}}
+  type: {{ .Values.service.type }}
 {{- end -}}

@@ -8,8 +8,8 @@ spec:
   selector:
     matchLabels:
       {{- include "monero.selectorLabels" . | nindent 6 }}
-  serviceName: {{ .Values.nameOverride }}
   replicas: {{ .Values.statefulset.replicas }}
+  serviceName: {{ .Values.nameOverride }}
   template:
     metadata:
       labels:
@@ -24,9 +24,14 @@ spec:
           ports:
             - containerPort: {{ .Values.service.main.ports.main.port }}
               name: {{ .Values.service.main.name }}
+            {{- if .Values.service.rpc.enabled }}
+            - containerPort: {{ .Values.service.rpc.ports.rpc.port }}
+              name: {{ .Values.service.rpc.name }}
+            {{- end }}
           volumeMounts:
             - name: {{ .Values.persistence.blockchain.name }}
               mountPath: {{ .Values.persistence.blockchain.mountPath }}
+      serviceAccountName: {{ .Values.nameOverride }}
   volumeClaimTemplates:
   - metadata:
       name: {{ .Values.persistence.blockchain.name }}

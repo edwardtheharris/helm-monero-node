@@ -36,7 +36,8 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - http:
+    - host: {{ .host }}
+      http:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
@@ -45,7 +46,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: monero-main
+                name: monero
                 port:
                   number: {{ .port }}
           {{- end }}
