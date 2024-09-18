@@ -19,8 +19,9 @@ tests/index
 :glob:
 
 .github/index
-docs/*
+license
 readme
+secret
 ```
 
 ## Installation and Upgrade
