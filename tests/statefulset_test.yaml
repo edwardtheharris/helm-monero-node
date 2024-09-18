@@ -11,7 +11,7 @@
 # ```
 suite: test for statefulset
 release:
-  name: chart
+  name: monero
 templates:
 - templates/statefulset.yaml
 values:

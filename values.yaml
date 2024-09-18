@@ -26,8 +26,8 @@ fullnameOverride: ""
 # ```
 image:
   pullPolicy: IfNotPresent
-  repository: ghcr.io/sethforprivacy/simple-monerod
-  tag: v0.18.3.4@sha256:435a80a7f7cc0a12d05038492e879aa45d6e7eb791ef1327ebff21c205491398
+  repository: edwardtheharris/monero-node
+  tag: 0.0.1-1b4924
 
 ###
 # ```{rubric} Ingress Values
@@ -69,27 +69,6 @@ ingress:
 # ```
 labels:
   node: k8s05.breeze-blocks.net
-  app.kubernetes.io/name: monero
-  app.kubernetes.io/instance: monero
-
-###
-# ```{rubric} Monero Node Configuration Values
-# ```
-# ---
-# Configure the monero node that will run on the cluster.
-#
-# ```{literalinclude} /values.yaml
-# :language: yaml
-# :start-at: "monero:\n"
-# :end-before: "###\n"
-# ```
-monero:
-  enablednsblocklist: true
-  noigd: true
-  pruneblockchain: true
-  publicnode: true
-  rpcbindip: 0.0.0.0
-  rpcbindport: "18089"
 nameOverride: "monero"
 
 ###
@@ -163,17 +142,16 @@ service:
         port: 18080
         protocol: TCP
         targetPort: 18080
-    type: LoadBalancer
   rpc:
     enabled: true
-    name: rpc
+    name: monero-rpc
     ports:
       rpc:
         enabled: true
         port: 18089
         protocol: TCP
         targetPort: 18089
-    type: LoadBalancer
+  type: LoadBalancer
 
 ###
 # ```{rubric} Service Account Values
@@ -186,7 +164,8 @@ service:
 # :start-at: "serviceAccount:\n"
 # ```
 serviceAccount:
-  annotations: {}
+  annotations:
+    sa.kubernetes.io/name: monero
   automount: true
   create: true
   name: monero

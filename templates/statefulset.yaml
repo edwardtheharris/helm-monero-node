@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         {{- include "monero.labels" . | nindent 8 }}
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/enforce-version: latest
     spec:
       containers:
         - name: {{ .Release.Name }}
@@ -28,11 +30,15 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: {{ .Values.persistence.blockchain.name }}
+      annotations:
+        {{- include "monero.selectorLabels" . | nindent 8 }}
+        volume.kubernetes.io/selected-node: k8s05.breeze-blocks.net
+      labels:
+        {{- include "monero.labels" . | nindent 8 }}
     spec:
-      accessModes:
-        - ReadWriteOnce
-        - ReadWriteMany
+      accessModes: ["ReadWriteOnce", "ReadWriteMany"]
       resources:
         requests:
           storage: {{ .Values.persistence.blockchain.size }}
-      storageClassName: csi-lvm-linear
+      storageClassName: {{ .Values.persistence.storageClass }}
+      volumeMode: Filesystem
