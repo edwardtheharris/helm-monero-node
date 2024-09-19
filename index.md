@@ -11,6 +11,7 @@ title: Monero Node
 :caption: contents
 
 docker/index
+templates/tests/index
 tests/index
 ```
 
@@ -21,7 +22,7 @@ tests/index
 .github/index
 license
 readme
-secret
+security
 ```
 
 ## Installation and Upgrade
@@ -38,6 +39,11 @@ docker build \
   -t ghcr.io/edwardtheharris/helm-monero-node/node:0.0.1-$(git rev-parse --short=6 HEAD) \
   -t edwardtheharris/monero-node:0.0.1-$(git rev-parse --short=6 HEAD) \
   --push -f docker/Dockerfile .
+```
+
+### Chart
+
+```{autoyaml} Chart.yaml
 ```
 
 ### Values

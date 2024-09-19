@@ -25,3 +25,4 @@ _build/
 .venv/
 .gnupg/
 test.yaml
+index.md

@@ -1,0 +1,99 @@
+###
+# ```{rubric} Ingress Test Suite
+# ```
+# ---
+# Tests to validate the deployment of the described Ingress.
+#
+# ```{literalinclude} /tests/ingress_test.yaml
+# :language: yaml
+# :caption: tests/ingress_test.yaml
+# :start-at: "suite: ingress\n"
+# :end-before: "###\n"
+# ```
+suite: ingress
+templates:
+- templates/ingress.yaml
+release:
+  name: monero
+values:
+- ../values.yaml
+set:
+  ingress:
+    annotations: {}
+    className: nginx
+    enabled: true
+    externalIPs: []
+    hosts:
+    - host: monero.example.com
+      paths:
+      - path: /
+        pathType: Prefix
+        port: 18080
+    loadBalancerIP: ''
+    tls:
+    - hosts:
+      - monero.example.com
+      secretName: monero-tls
+  labels:
+    node: k8s05.example.com
+
+###
+# ```{rubric} Ingress Tests
+# ```
+# ---
+# Tests for Ingress Template
+#
+# ```{literalinclude} /tests/ingress_test.yaml
+# :language: yaml
+# :caption: tests/ingress_test.yaml#tests
+# :start-at: "tests:\n"
+# ```
+tests:
+- it: Should create an Ingress named 'monero' with correct metadata
+  asserts:
+  - equal:
+      path: metadata.name
+      value: monero
+  - equal:
+      path: metadata.labels
+      value:
+        helm.sh/chart: monero-0.0.1
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/instance: monero
+        kubernetes.io/hostname: k8s05.example.com
+        app.kubernetes.io/version: "0.18.3.4-2"
+        app.kubernetes.io/managed-by: Helm
+        node: k8s05.example.com
+
+- it: Should configure the correct ingressClassName
+  asserts:
+  - equal:
+      path: spec.ingressClassName
+      value: nginx
+
+- it: Should configure the correct TLS settings
+  asserts:
+  - equal:
+      path: spec.tls[0].hosts[0]
+      value: monero.example.com
+  - equal:
+      path: spec.tls[0].secretName
+      value: monero-tls
+
+- it: Should configure the correct rules for the Ingress
+  asserts:
+  - equal:
+      path: spec.rules[0].host
+      value: monero.example.com
+  - equal:
+      path: spec.rules[0].http.paths[0].path
+      value: /
+  - equal:
+      path: spec.rules[0].http.paths[0].pathType
+      value: Prefix
+  - equal:
+      path: spec.rules[0].http.paths[0].backend.service.name
+      value: monero
+  - equal:
+      path: spec.rules[0].http.paths[0].backend.service.port.number
+      value: 18080

@@ -1,0 +1,85 @@
+###
+# ```{rubric} Service Test Suite
+# ```
+# ---
+# Tests to validate the deployment of the described Service.
+#
+# ```{literalinclude} /tests/service_test.yaml
+# :language: yaml
+# :caption: tests/service_test.yaml#suite
+# :start-at: "suite: service\n"
+# :end-before: "###\n"
+# ```
+suite: service
+templates:
+- templates/service.yaml
+release:
+  name: monero
+values:
+- ../values.yaml
+set:
+  labels:
+    node: k8s05.example.com
+
+###
+# ```{rubric} Service Tests
+# ```
+# ---
+# Tests for Service Template
+#
+# ```{literalinclude} /tests/service_test.yaml
+# :language: yaml
+# :caption: tests/service_test.yaml#tests
+# :start-at: "tests:\n"
+# ```
+tests:
+- it: Should create a Service named 'monero' with correct metadata
+  asserts:
+  - equal:
+      path: metadata.name
+      value: monero
+  - equal:
+      path: metadata.labels
+      value:
+        helm.sh/chart: monero-0.0.1
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/instance: monero
+        kubernetes.io/hostname: k8s05.example.com
+        app.kubernetes.io/version: "0.18.3.4-2"
+        app.kubernetes.io/managed-by: Helm
+        node: k8s05.example.com
+
+- it: Should have a LoadBalancer type and correct ports configuration
+  asserts:
+  - equal:
+      path: spec.type
+      value: LoadBalancer
+  - equal:
+      path: spec.ports
+      value:
+      - port: 18080
+        targetPort: 18080
+        protocol: TCP
+        name: main
+      - port: 18081
+        targetPort: 18081
+        protocol: TCP
+        name: rpc
+
+- it: Should have correct selectors for the service
+  asserts:
+  - equal:
+      path: spec.selector
+      value:
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/instance: monero
+        kubernetes.io/hostname: k8s05.example.com
+
+- it: Should have an empty externalIPs list and no loadBalancerIP
+  asserts:
+  - equal:
+      path: spec.externalIPs
+      value: []
+  - equal:
+      path: spec.loadBalancerIP
+      value: null
