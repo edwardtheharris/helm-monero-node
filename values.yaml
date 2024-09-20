@@ -25,9 +25,9 @@ fullnameOverride: ""
 # :end-before: "###\n"
 # ```
 image:
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   repository: edwardtheharris/monero-node
-  tag: 0.0.1-1b4924
+  tag: 0.0.1
 
 ###
 # ```{rubric} Ingress Values
@@ -53,6 +53,7 @@ ingress:
       port: 18080
   loadBalancerIP: ''
   secret:
+    enabled: false
     crt: ''
     key: ''
   tls:
@@ -74,6 +75,11 @@ ingress:
 # ```
 labels:
   node: k8s05.breeze-blocks.net
+monero:
+  login:
+    enabled: false
+    password: ''
+    username: ''
 nameOverride: "monero"
 
 ###
@@ -141,7 +147,7 @@ securityContext:
 service:
   enabled: true
   main:
-    name: monero-main
+    name: main
     ports:
       main:
         port: 18080
@@ -149,13 +155,12 @@ service:
         targetPort: 18080
   rpc:
     enabled: true
-    name: monero-rpc
+    name: rpc
     ports:
       rpc:
-        enabled: true
-        port: 18089
+        port: 18081
         protocol: TCP
-        targetPort: 18089
+        targetPort: 18081
   type: LoadBalancer
 
 ###
@@ -170,7 +175,8 @@ service:
 # ```
 serviceAccount:
   annotations:
-    sa.kubernetes.io/name: monero
+    app.kubernetes.io/name: monero
+    app.kubernetes.io/instance: monero
   automount: true
   create: true
   name: monero

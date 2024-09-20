@@ -28,6 +28,13 @@ spec:
             - containerPort: {{ .Values.service.rpc.ports.rpc.port }}
               name: {{ .Values.service.rpc.name }}
             {{- end }}
+          resources:
+            limits:
+              cpu: 4
+              memory: 14Gi
+            requests:
+              cpu: 3
+              memory: 12Gi
           volumeMounts:
             - name: {{ .Values.persistence.blockchain.name }}
               mountPath: {{ .Values.persistence.blockchain.mountPath }}
