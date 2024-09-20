@@ -15,7 +15,7 @@ your version of {term}`Docker` includes the `buildx` plugin.
 ```{code-block} shell
 GHCR_REPO=ghcr.io/username/helm-monero-node/node
 DOCKER_REPO=username/monero-node
-VERSION="0.0.1-$(git rev-parse --short=6 HEAD)"
+VERSION="0.0.2-$(git rev-parse --short=6 HEAD)"
 
 source secrets/monero.sh
 

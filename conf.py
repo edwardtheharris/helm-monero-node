@@ -19,7 +19,7 @@ def get_release():
         ret_value = version_query.git_query.query_git_repo(repo_path).to_str()
     except ValueError:
         ret_value = version_query.Version.from_str(
-            '0.0.1').devel_increment().to_str()
+            '0.0.2').devel_increment().to_str()
     return ret_value
 
 author = 'Xander Harris'

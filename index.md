@@ -35,9 +35,9 @@ helm upgrade --install monero oci://tccr.io/truecharts/monero-node -f values.yam
 
 ```{code-block} shell
 docker build \
-  --build-arg VERSION="0.0.1-$(git rev-parse --short=6 HEAD)" \
-  -t ghcr.io/edwardtheharris/helm-monero-node/node:0.0.1-$(git rev-parse --short=6 HEAD) \
-  -t edwardtheharris/monero-node:0.0.1-$(git rev-parse --short=6 HEAD) \
+  --build-arg VERSION="0.0.2-$(git rev-parse --short=6 HEAD)" \
+  -t ghcr.io/edwardtheharris/helm-monero-node/node:0.0.2-$(git rev-parse --short=6 HEAD) \
+  -t edwardtheharris/monero-node:0.0.2-$(git rev-parse --short=6 HEAD) \
   --push -f docker/Dockerfile .
 ```
 

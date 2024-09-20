@@ -1,5 +1,5 @@
 FROM archlinux:base-devel
-ARG VERSION='0.0.1'
+ARG VERSION='0.0.2'
 ARG RPC_ORIGINS='192.168.1.0/16'
 ENV RPC_ORIGINS=${RPC_ORIGINS}
 LABEL org.opencontainers.image.licenses="Unlicense"
