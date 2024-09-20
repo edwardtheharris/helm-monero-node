@@ -41,7 +41,7 @@ tests:
   - equal:
       path: metadata.labels
       value:
-        helm.sh/chart: monero-0.0.1
+        helm.sh/chart: monero-0.0.2
         app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
         kubernetes.io/hostname: k8s05.example.com
@@ -63,7 +63,7 @@ tests:
   - equal:
       path: spec.template.metadata.labels
       value:
-        helm.sh/chart: monero-0.0.1
+        helm.sh/chart: monero-0.0.2
         app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
         kubernetes.io/hostname: k8s05.example.com
@@ -78,7 +78,7 @@ tests:
   - equal:
       path: spec.template.spec.containers
       value:
-      - image: edwardtheharris/monero-node:0.0.1
+      - image: edwardtheharris/monero-node:0.0.2
         imagePullPolicy: Always
         name: monero
         ports:

@@ -19,7 +19,7 @@ title: Readme
 1. Build the container image.
 
    ```shell
-   VERSION=0.0.1
+   VERSION=0.0.2
    DOCKER_REPO=edwardtheharris/monero-node
    GHCR_REPO=ghcr.io/edwardtheharris/helm-monero-node/node
 
