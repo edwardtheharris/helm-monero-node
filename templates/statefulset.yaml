@@ -44,7 +44,7 @@ spec:
       name: {{ .Values.persistence.blockchain.name }}
       annotations:
         {{- include "monero.selectorLabels" . | nindent 8 }}
-        volume.kubernetes.io/selected-node: k8s05.breeze-blocks.net
+        volume.kubernetes.io/selected-node: {{ .Values.labels.node }}
       labels:
         {{- include "monero.labels" . | nindent 8 }}
     spec:

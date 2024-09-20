@@ -29,6 +29,26 @@ title: Unit Tests
 
 This provides the following suites.
 
+### Ingress Suite
+
+```{autoyaml} tests/ingress_test.yaml
+```
+
+### Secret Suite
+
+```{autoyaml} tests/secret_test.yaml
+```
+
+### Service Suite
+
+```{autoyaml} tests/service_test.yaml
+```
+
+### ServiceAccount Suite
+
+```{autoyaml} tests/serviceaccount_test.yaml
+```
+
 ### StatefulSet Suite
 
 ```{autoyaml} tests/statefulset_test.yaml

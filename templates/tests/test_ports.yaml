@@ -1,0 +1,33 @@
+###
+# ```{rubric} Integration Tests
+# ```
+# ---
+# Test the deployed service ports.
+#
+# ```{literalinclude} /templates/tests/test_ports.yaml
+# :language: yaml
+# :caption: templates/tests/test_ports.yaml
+# :start-at: "apiVersion: v1\n"
+# ```
+#
+# Source: templates/tests/test_ports.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: monero-ports-test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  containers:
+  - name: netcat
+    image: busybox:1.31.1
+    command: ["/bin/sh", "-c"]
+    args:
+      - >
+        nc -zv monero.monero.svc.cluster.local 18080
+        && echo "Port 18080 is open" || echo "Port 18080 is closed";
+        nc -zv monero.monero.svc.cluster.local 18081
+        && echo "Port 18081 is open" || echo "Port 18081 is closed";
+    # Optionally you can add a restart policy if needed
+  restartPolicy: Never
