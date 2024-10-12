@@ -10,16 +10,10 @@ spec:
     {{ .Values.ingress.externalIPs }}
   loadBalancerIP: {{ .Values.ingress.loadBalancerIP }}
   ports:
-    - port: {{ .Values.service.main.ports.main.port }}
-      targetPort: {{ .Values.service.main.ports.main.port }}
-      protocol: {{ .Values.service.main.ports.main.protocol }}
+    - port: {{ .Values.service.main.port }}
+      targetPort: {{ .Values.service.main.port }}
+      protocol: {{ .Values.service.main.protocol }}
       name: {{ .Values.service.main.name }}
-{{- if .Values.service.rpc.enabled }}
-    - port: {{ .Values.service.rpc.ports.rpc.port }}
-      targetPort: {{ .Values.service.rpc.ports.rpc.port }}
-      protocol: {{ .Values.service.rpc.ports.rpc.protocol }}
-      name: {{ .Values.service.rpc.name }}
-{{- end }}
   selector:
     {{- include "monero.selectorLabels" . | nindent 4 }}
   type: {{ .Values.service.type }}

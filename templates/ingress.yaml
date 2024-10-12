@@ -13,7 +13,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ include "monero.name" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "monero.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}

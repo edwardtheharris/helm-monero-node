@@ -51,7 +51,6 @@ Selector labels
 {{- define "monero.selectorLabels" -}}
 app.kubernetes.io/name: {{ .Chart.Name }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-kubernetes.io/hostname: {{ .Values.labels.node }}
 {{- end }}
 
 {{/*
