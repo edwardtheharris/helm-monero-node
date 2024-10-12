@@ -41,12 +41,12 @@ tests:
   - equal:
       path: metadata.labels
       value:
-        helm.sh/chart: monero-0.0.2
-        app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
-        app.kubernetes.io/version: "0.18.3.4-2"
         app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/node: k8s05.breeze-blocks.net
+        app.kubernetes.io/version: 0.18.3.4-2
+        helm.sh/chart: monero-0.0.2
         node: k8s05.example.com
 
 - it: Should have a LoadBalancer type and correct ports configuration
@@ -57,14 +57,10 @@ tests:
   - equal:
       path: spec.ports
       value:
-      - port: 18080
-        targetPort: 18080
-        protocol: TCP
-        name: main
-      - port: 18081
-        targetPort: 18081
-        protocol: TCP
-        name: rpc
+        - name: monero
+          port: 18081
+          protocol: TCP
+          targetPort: 18081
 
 - it: Should have correct selectors for the service
   asserts:
@@ -73,7 +69,6 @@ tests:
       value:
         app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
 
 - it: Should have an empty externalIPs list and no loadBalancerIP
   asserts:

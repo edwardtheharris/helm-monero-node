@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.nameOverride }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "monero.labels" . | nindent 4 }}
 spec:
@@ -9,7 +9,7 @@ spec:
     matchLabels:
       {{- include "monero.selectorLabels" . | nindent 6 }}
   replicas: {{ .Values.statefulset.replicas }}
-  serviceName: {{ .Values.nameOverride }}
+  serviceName: {{ .Release.Name }}
   template:
     metadata:
       labels:
@@ -19,38 +19,38 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}
+          {{- if .Values.monero.login.enabled }}
+          envFrom:
+            - secretRef:
+                name: monero-login
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.service.main.ports.main.port }}
-              name: {{ .Values.service.main.name }}
-            {{- if .Values.service.rpc.enabled }}
-            - containerPort: {{ .Values.service.rpc.ports.rpc.port }}
-              name: {{ .Values.service.rpc.name }}
-            {{- end }}
+            - containerPort: {{ .Values.service.main.port }}
+              name: {{ .Release.Name }}
           resources:
             limits:
-              cpu: 4
-              memory: 14Gi
+              cpu: "3"
+              memory: 6Gi
             requests:
-              cpu: 3
-              memory: 12Gi
+              cpu: "2"
+              memory: 4Gi
           volumeMounts:
             - name: {{ .Values.persistence.blockchain.name }}
               mountPath: {{ .Values.persistence.blockchain.mountPath }}
-      serviceAccountName: {{ .Values.nameOverride }}
+      nodeSelector:
+        kubernetes.io/hostname: k8s05.breeze-blocks.net
+      serviceAccountName: {{ .Release.Name }}
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Values.persistence.blockchain.name }}
-      annotations:
-        {{- include "monero.selectorLabels" . | nindent 8 }}
-        volume.kubernetes.io/selected-node: {{ .Values.labels.node }}
-      labels:
-        {{- include "monero.labels" . | nindent 8 }}
+      name: monero
     spec:
-      accessModes: ["ReadWriteOnce", "ReadWriteMany"]
+      accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
       resources:
         requests:
-          storage: {{ .Values.persistence.blockchain.size }}
-      storageClassName: {{ .Values.persistence.storageClass }}
+          storage: 300Gi
+      storageClassName: csi-lvm-linear
       volumeMode: Filesystem

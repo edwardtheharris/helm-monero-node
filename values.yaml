@@ -41,7 +41,8 @@ image:
 # :end-before: "###\n"
 # ```
 ingress:
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: breeze-blocks-ca
   className: nginx
   enabled: true
   externalIPs: []
@@ -50,7 +51,8 @@ ingress:
     paths:
     - path: /
       pathType: Prefix
-      port: 18080
+      port: 18081
+      serviceName: monero
   loadBalancerIP: ''
   secret:
     enabled: false
@@ -59,7 +61,7 @@ ingress:
   tls:
   - hosts:
     - monero.breeze-blocks.net
-    secretName: monero-tls
+    secretName: monero-cert
 
 
 ###
@@ -70,11 +72,11 @@ ingress:
 #
 # ```{literalinclude} /values.yaml
 # :language: yaml
-# :start-at: "image:\n"
+# :start-at: "labels:\n"
 # :end-before: "###\n"
 # ```
 labels:
-  node: k8s05.breeze-blocks.net
+  app.kubernetes.io/node: k8s05.breeze-blocks.net
 monero:
   login:
     enabled: false
@@ -97,7 +99,7 @@ persistence:
   blockchain:
     enabled: true
     mountPath: /srv/monero
-    name: monero-blockchain-pvc
+    name: monero
     size: 300Gi
   storageClass: csi-lvm-linear
 
@@ -147,20 +149,10 @@ securityContext:
 service:
   enabled: true
   main:
-    name: main
-    ports:
-      main:
-        port: 18080
-        protocol: TCP
-        targetPort: 18080
-  rpc:
-    enabled: true
-    name: rpc
-    ports:
-      rpc:
-        port: 18081
-        protocol: TCP
-        targetPort: 18081
+    name: monero
+    port: 18081
+    protocol: TCP
+    targetPort: 18081
   type: LoadBalancer
 
 ###

@@ -41,12 +41,12 @@ tests:
   - equal:
       path: metadata.labels
       value:
-        helm.sh/chart: monero-0.0.2
-        app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
-        app.kubernetes.io/version: "0.18.3.4-2"
         app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/node: k8s05.breeze-blocks.net
+        app.kubernetes.io/version: 0.18.3.4-2
+        helm.sh/chart: monero-0.0.2
         node: k8s05.example.com
 
 - it: Should have correct selector and matchLabels
@@ -56,19 +56,18 @@ tests:
       value:
         app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
 
 - it: Should configure the Pod template metadata and labels correctly
   asserts:
   - equal:
       path: spec.template.metadata.labels
       value:
-        helm.sh/chart: monero-0.0.2
-        app.kubernetes.io/name: monero
         app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
-        app.kubernetes.io/version: "0.18.3.4-2"
         app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: monero
+        app.kubernetes.io/node: k8s05.breeze-blocks.net
+        app.kubernetes.io/version: 0.18.3.4-2
+        helm.sh/chart: monero-0.0.2
         node: k8s05.example.com
         pod-security.kubernetes.io/enforce: privileged
         pod-security.kubernetes.io/enforce-version: latest
@@ -82,39 +81,35 @@ tests:
         imagePullPolicy: Always
         name: monero
         ports:
-        - containerPort: 18080
-          name: main
         - containerPort: 18081
-          name: rpc
+          name: monero
         resources:
           limits:
-            cpu: 4
-            memory: 14Gi
+            cpu: "3"
+            memory: 6Gi
           requests:
-            cpu: 3
-            memory: 12Gi
+            cpu: "2"
+            memory: 4Gi
         volumeMounts:
         - mountPath: /srv/monero
-          name: monero-blockchain-pvc
+          name: monero
   - equal:
       path: spec.template.spec.containers[0].ports
       value:
-      - containerPort: 18080
-        name: main
       - containerPort: 18081
-        name: rpc
+        name: monero
   - equal:
       path: spec.template.spec.containers[0].resources
       value:
         limits:
-          cpu: 4
-          memory: 14Gi
+          cpu: "3"
+          memory: 6Gi
         requests:
-          cpu: 3
-          memory: 12Gi
+          cpu: "2"
+          memory: 4Gi
   - equal:
       path: spec.template.spec.containers[0].volumeMounts[0].name
-      value: monero-blockchain-pvc
+      value: monero
   - equal:
       path: spec.template.spec.containers[0].volumeMounts[0].mountPath
       value: /srv/monero
@@ -129,14 +124,7 @@ tests:
   asserts:
   - equal:
       path: spec.volumeClaimTemplates[0].metadata.name
-      value: monero-blockchain-pvc
-  - equal:
-      path: spec.volumeClaimTemplates[0].metadata.annotations
-      value:
-        app.kubernetes.io/name: monero
-        app.kubernetes.io/instance: monero
-        kubernetes.io/hostname: k8s05.example.com
-        volume.kubernetes.io/selected-node: k8s05.example.com
+      value: monero
   - equal:
       path: spec.volumeClaimTemplates[0].spec.accessModes
       value:

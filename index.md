@@ -51,6 +51,12 @@ docker build \
 ```{autoyaml} values.yaml
 ```
 
+## Indices and tables
+
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
+
 ## Glossary
 
 ```{glossary}
@@ -58,8 +64,17 @@ Docker
   Docker is the first container runtime to become ubiquitous and so is still
   frequently used to build images that will run on Kubernetes or other
   orchestrators. More information is available [here](https://app.docker.com/).
+
+GitHub
+   Most likely the site this repository is hosted on. More information is
+   available [here](https://github.com).
+
+Helm
+   A tool commonly used to deploy applications to {term}`Kubernetes`. More
+   information is available [here](https://helm.sh).
+
+Kubernetes
+   An ancient Greek word that means 'sailor' or 'navigator', it is the
+   most common container orchestration system currently in use. More
+   information is available [here](https://kubernetes.io).
 ```
-
-## Indexes
-
-- {ref}`genindex`

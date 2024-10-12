@@ -13,4 +13,5 @@ COPY docker/entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/entrypoint.sh
 EXPOSE 18080
 EXPOSE 18081
+VOLUME ["/srv/monero"]
 CMD ["/bin/entrypoint.sh"]
